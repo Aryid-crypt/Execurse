@@ -6,25 +6,53 @@
 </head>
 <body>
 	<h1>Sign Up Form</h1>
-	<form method="post">
+	<form action="#" method="post">
 		<label for "username">Username</label><br>
 		<input type="text" id="username" name="username"><br>
+		{% with errors = get_flashed_messages(category_filter=["username_error"]) %}
+			{% if errors %}
+				{% for message in errors %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
 		
 		<label for "password">Password</label><br>
 		<input type="password" id="password" name="password"><br>
+		{% with errors = get_flashed_messages(category_filter=["password_error"]) %}
+			{% if errors %}
+				{% for message in errors %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
 		
-		<label for "confirm">Reenter Password</label><br>
+		<label for "confirm">Re-enter Password</label><br>
 		<input type="password" id="confirm" name="confirm"><br>
+		{% with errors = get_flashed_messages(category_filter=["confirm_error"]) %}
+			{% if errors %}
+				{% for message in errors %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
 		
 		<label for "email">Email</label><br>
 		<input type="text" id="email" name="email"><br>
+		{% with errors = get_flashed_messages(category_filter=["email_error"]) %}
+			{% if errors %}
+				{% for message in errors %}
+					<p>{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
 		
 		<p>Set account type:</p>
 		<input type="radio" id="student" name="accountType" value="0" checked="checked">
 		<label for="student">Student</label><br>
 		<input type="radio" id="academic" name="accountType" value="1">
 		<label for="academic">Academic</label><br>
-
+		
 		<p>Terms and conditions:</p>
 		<textarea disabled="true" rows="8" cols="100">
 		*Terms and conditions here*
