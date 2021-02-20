@@ -1,4 +1,4 @@
-import hashing, re
+import hashing
 import database_functions as db
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 
