@@ -89,7 +89,6 @@ def signup():
 
 		if error == False:
 			hashed_password = hashing.hash_password(username, password)
-			print(hashed_password)
 			db.add_user(username, hashed_password, email, accountType)
 			return redirect(url_for("login"))
 
