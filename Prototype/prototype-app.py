@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 
 app = Flask(__name__)
-app.secret_key = "secret" #Secret key used to sign cookies and sessions (should be environmental variable)
+app.secret_key = "secret" #Secret key used to sign cookies and sessions (should be environmental variable "secret" is temporary)
 
 @app.route('/', methods=["POST", "GET"])
 def login():
