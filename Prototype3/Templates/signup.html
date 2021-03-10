@@ -3,14 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="signup.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/signup.css') }}">
 
 </head>
 <body>
 	<div class="mainscreen">
 		<div class="toppart">
 			<div class="herotext">
-				<h1>Sign Up Form</h1>
+				<h1>Sign Up</h1>
 			</div>
 		</div>
 	
@@ -19,7 +19,7 @@
 	<div class="bottompart">
 		<!-- Image Part -->
 		<div class="imgpart">
-			<img src="5436.jpg" class="heroimg" alt="">
+			<img src="{{ url_for('static', filename='5436.jpg') }}" class="heroimg" alt="">
 		</div>
 
 
@@ -33,7 +33,7 @@
 			{% with errors = get_flashed_messages(category_filter=["username_error"]) %}
 				{% if errors %}
 					{% for message in errors %}
-						<p>{{ message }}</p>
+						<p style="color: red">{{ message }}</p>
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
@@ -47,7 +47,7 @@
 			{% with errors = get_flashed_messages(category_filter=["password_error"]) %}
 				{% if errors %}
 					{% for message in errors %}
-						<p>{{ message }}</p>
+						<p style="color: red">{{ message }}</p>
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
@@ -57,7 +57,7 @@
 			{% with errors = get_flashed_messages(category_filter=["email_error"]) %}
 				{% if errors %}
 					{% for message in errors %}
-						<p>{{ message }}</p>
+						<p style="color: red">{{ message }}</p>
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
