@@ -3,20 +3,20 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="login.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login.css') }}">
 </head>
 <body>
 	<div class="mainscreen">
 		<div class="toppart">
 			<div class="herotext">
-				<h1>Log In Form</h1>
+				<h1>Execurse</h1>
 			</div>
 		</div>
 
 	<div class="bottompart">
 		<!-- Image Part -->
 		<div class="imgpart">
-			<img src="5436.jpg" class="heroimg" alt="">
+			<img src="{{ url_for('static', filename='5436.jpg') }}" class="heroimg" alt="">
 		</div>
 		
 	<!--form part-->
@@ -29,7 +29,7 @@
 		{% with errors = get_flashed_messages() %}
 			{% if errors %}
 				{% for message in errors %}
-					<p>{{ message }}</p>
+					<p style="color: red">{{ message }}</p>
 				{% endfor %}
 			{% endif %}
 		{% endwith %}
