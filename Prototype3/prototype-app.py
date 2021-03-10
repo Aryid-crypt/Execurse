@@ -1,10 +1,14 @@
 import hashing
 import database_functions as db
+import verification_code
 from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, session, flash, abort
 
 app = Flask(__name__)
 app.secret_key = "secret"
+
+global verification_username,verification_code,verification_wrong_code,verification_email_sent,verification_resend
+verification_username = ""
 
 @app.route('/', methods=["POST", "GET"])
 def login():
@@ -56,6 +60,7 @@ def signup():
 		redirect(url_for("login")): redirects user to the login page on successful signup
 		render_template("signup.html"): gets the signup.html file from the templates folder
 	'''
+	global verification_username
 	if request.method == "POST":
 		
 		username = request.form["username"]
@@ -111,9 +116,79 @@ def signup():
 		if error == False:
 			hashed_password = hashing.hash_password(username, password)
 			db.add_user(username, hashed_password, email, 0)
-			return redirect(url_for("login"))
+			verification_username = username
+			return redirect(url_for("account_verification"))
 
 	return render_template("signup.html")
+
+verification_email_sent = False #used in verification
+verification_code = verification_code.create_code() #used in verification
+verification_wrong_code = False #used in verification
+verification_resend = False #used in verification
+
+
+@app.route("/verification")
+def account_verification():
+    '''the verification page for the application
+    Arguements:
+        Nothing
+    Returns:
+        redirect(url_for("login"))): redirect user to login if code entered correctly
+        verify_account: html for the page
+    '''
+    import send_email
+    global verification_username,verification_code,verification_wrong_code,verification_email_sent,verification_resend
+    exists = False
+
+    entered_code = request.args.get("entered_code")
+    verification_resend = request.args.get("resend_email")
+    update = request.args.get("update_email")
+    
+    if entered_code:
+        if entered_code == verification_code:
+            verification_username = ""
+            return (redirect(url_for("login")))
+        else:
+            verification_wrong_code = True
+            
+    if verification_resend == "":
+        verification_email_sent = False
+        verification_resend = False
+        
+    if update:
+        if db.check_email_already_exists(email) == True:
+            exists = True
+        else:
+            user_id = db.get_user_id(verification_username)
+            db.replace_user_email(user_id,update)
+            verification_email_sent = False
+
+    if verification_email_sent == False:
+        user_id = db.get_user_id(verification_username)
+        user_email = db.get_user_email(user_id)
+        send_email.send_code(user_email,verification_code)
+        verification_email_sent = True
+
+
+    verify_account = """to verify your account, we have sent a code to your email<br>\
+    please enter that code in the box below<br>\
+    <form action = '/verification' method = 'get'>\
+    <input type = 'text' name = 'entered_code'></form>"""
+    if verification_wrong_code == True:
+        verify_account = verify_account + """\
+        that was not the correct code. please try again"""
+    verify_account = verify_account + """<br>\
+    <form action = '/verification' method = 'get'>\
+    <button type = 'submit' name = 'resend_email'>Resend Email</button></form>"""
+    verify_account = verify_account + """<br><br>\
+    want to change your email address? do so in the box below<br>"""
+    verify_account = verify_account + """\
+    <form action = '/verification' method = 'get'>\
+    <input type = 'text' name = 'update_email'></form>"""
+    if exists == True:
+        verify_account = verify_account + "<br> email already in use, please enter another one"
+
+    return verify_account
 
 
 @app.route('/forum', methods=["POST", "GET"])
