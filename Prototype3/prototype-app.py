@@ -7,8 +7,11 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 app = Flask(__name__)
 app.secret_key = "secret"
 
-global verification_username,verification_code,verification_wrong_code,verification_email_sent,verification_resend
-verification_username = ""
+global verification_first,verification_wrong_code,verification_email_sent,verification_resend
+verification_email_sent = False #used in verification
+verification_wrong_code = False #used in verification
+verification_resend = False #used in verification
+verification_first = True
 
 @app.route('/', methods=["POST", "GET"])
 def login():
@@ -116,7 +119,7 @@ def signup():
 		if error == False:
 			hashed_password = hashing.hash_password(username, password)
 			db.add_user(username, hashed_password, email, 0)
-			verification_username = username
+			session[verificationusername] = username
 			return redirect(url_for("account_verification"))
 
 	return render_template("signup.html")
@@ -137,15 +140,18 @@ def account_verification():
         verify_account: html for the page
     '''
     import send_email
-    global verification_username,verification_code,verification_wrong_code,verification_email_sent,verification_resend
+    global verification_first,verification_wrong_code,verification_email_sent,verification_resend
     exists = False
+    if verification_first == True:
+        session["verificationcode"] = verification_code.create_code() #used in verification
+        verification_first = False
 
     entered_code = request.args.get("entered_code")
     verification_resend = request.args.get("resend_email")
     update = request.args.get("update_email")
     
     if entered_code:
-        if entered_code == verification_code:
+        if entered_code == session["verificationcode"]:
             verification_username = ""
             return (redirect(url_for("login")))
         else:
@@ -156,22 +162,24 @@ def account_verification():
         verification_resend = False
         
     if update:
-        if db.check_email_already_exists(email) == True:
+        if db.check_email_already_used(update) == True:
             exists = True
         else:
-            user_id = db.get_user_id(verification_username)
+            user = session["verificationusername"]
+            user_id = db.get_user_id(user)
             db.replace_user_email(user_id,update)
             verification_email_sent = False
 
     if verification_email_sent == False:
-        user_id = db.get_user_id(verification_username)
+        user = session["verificationusername"]
+        user_id = db.get_user_id(user)
         user_email = db.get_user_email(user_id)
-        send_email.send_code(user_email,verification_code)
+        send_email.send_code(user_email,session["verificationcode"])
         verification_email_sent = True
 
 
     verify_account = """to verify your account, we have sent a code to your email<br>\
-    please enter that code in the box below, then press enter<br>\
+    please enter that code in the box below<br>\
     <form action = '/verification' method = 'get'>\
     <input type = 'text' name = 'entered_code'></form>"""
     if verification_wrong_code == True:
