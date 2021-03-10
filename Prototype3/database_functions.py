@@ -685,3 +685,37 @@ def remove_like_reply(user_id, reply_id):
 	cursor.execute(query, [reply_id])
 	con.commit()
 	con.close()
+	
+def get_user_email(user_id):
+    '''
+    Retrieves the email of a specific user from the database
+    Arguments:
+        user_id(int): user_id of the provided user
+    Returns:
+        result(list of tuples) will only have one email:
+            email(str): the users provided email address
+    '''
+    con = sl.connect("Execurse.db")
+    cursor = con.cursor()
+    query = "SELECT email FROM USER WHERE user_id = ?"""
+    cursor.execute(query, [user_id])
+    result = cursor.fetchall()
+    con.close()
+    return result
+
+
+def replace_user_email(user_id, email):
+    '''
+    Replaces the users email with one they have provided in the database
+    Arguments:
+        user_id(int): the user_id of the user replacing their email
+        email(str): the email provided to replace the previously entered one
+    Returns:
+        Null
+    '''
+    con = sl.connect("Execurse.db")
+    cursor = con.cursor()
+    query = """UPDATE USER SET email =  ? WHERE user_id = ?"""
+    cursor.execute(query, [email, user_id])
+    con.commit()
+    con.close()
