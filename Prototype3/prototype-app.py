@@ -119,7 +119,7 @@ def signup():
 		if error == False:
 			hashed_password = hashing.hash_password(username, password)
 			db.add_user(username, hashed_password, email, 0)
-			session[verificationusername] = username
+			session["verificationusername"] = username
 			return redirect(url_for("account_verification"))
 
 	return render_template("signup.html")
