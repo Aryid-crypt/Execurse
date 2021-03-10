@@ -3,51 +3,76 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="signup.css">
+
 </head>
 <body>
-	<h1>Sign Up Form</h1>
-	<form action="#" method="post">
-		<label for "username">Username</label><br>
-		<input type="text" id="username" name="username"><br>
-		{% with errors = get_flashed_messages(category_filter=["username_error"]) %}
-			{% if errors %}
-				{% for message in errors %}
-					<p>{{ message }}</p>
-				{% endfor %}
-			{% endif %}
-		{% endwith %}
-		<label for "password">Password</label><br>
-		<input type="password" id="password" name="password"><br>
-		<label for "confirm">Re-enter Password</label><br>
-		<input type="password" id="confirm" name="confirm"><br>
-		{% with errors = get_flashed_messages(category_filter=["password_error"]) %}
-			{% if errors %}
-				{% for message in errors %}
-					<p>{{ message }}</p>
-				{% endfor %}
-			{% endif %}
-		{% endwith %}
-		<label for "email">Email</label><br>
-		<input type="text" id="email" name="email"><br>
-		{% with errors = get_flashed_messages(category_filter=["email_error"]) %}
-			{% if errors %}
-				{% for message in errors %}
-					<p>{{ message }}</p>
-				{% endfor %}
-			{% endif %}
-		{% endwith %}
-		<p>Terms and conditions:</p>
-		<textarea rows= "24" cols="100" style="font-size: 12pt; resize: none;" readonly>
+	<div class="mainscreen">
+		<div class="toppart">
+			<div class="herotext">
+				<h1>Sign Up Form</h1>
+			</div>
+		</div>
+	
 
-EXECURSE TERMS AND CONDITIONS
 
-Effective date: February 19, 2021
+	<div class="bottompart">
+		<!-- Image Part -->
+		<div class="imgpart">
+			<img src="5436.jpg" class="heroimg" alt="">
+		</div>
 
-These terms and conditions apply to You, the user of this application, and Group V the Owner and operator of the following application: “Execurse”.
 
-PLEASE READ THE TERMS AND CONDITIONS CAREFULLY as they affect your legal right.
 
-1. Definitions
+	<!--Form part-->
+	<div class="formpart">
+		<form action="#" method="post">
+			<h2>Login information</h2>
+			<label for="username">Username</label><br>
+			<input class="inputbox" type="text" id="username" name="username" autocomplete="off"><br>
+			{% with errors = get_flashed_messages(category_filter=["username_error"]) %}
+				{% if errors %}
+					{% for message in errors %}
+						<p>{{ message }}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		
+			<label for="password">Password</label><br>
+			<input class="inputbox" type="password" id="password" name="password" autocomplete="off"><br>
+		
+		
+			<label for="confirm">Re-enter Password</label><br>
+			<input class ="inputbox" type="password" id="confirm" name="confirm" autocomplete="off"><br>
+			{% with errors = get_flashed_messages(category_filter=["password_error"]) %}
+				{% if errors %}
+					{% for message in errors %}
+						<p>{{ message }}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		
+			<label for="email">Email</label><br>
+			<input class="inputbox" type="text" id="email" name="email" autocomplete="off"><br>
+			{% with errors = get_flashed_messages(category_filter=["email_error"]) %}
+				{% if errors %}
+					{% for message in errors %}
+						<p>{{ message }}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		
+			<p class="inputbox">Terms and conditions:</p>
+			<textarea class = "inputbox" disabled="true" rows="8" cols="100">
+			EXECURSE TERMS AND CONDITIONS
+
+			Effective date: February 19, 2021
+
+			These terms and conditions apply to You, the user of this application, and Group V the Owner and operator of the following application: “Execurse”.
+
+			PLEASE READ THE TERMS AND CONDITIONS CAREFULLY as they affect your legal right.
+
+			1. Definitions
 
 “Parties” means both You(the user of the service) and the Owner of  this Service.
 
@@ -257,16 +282,19 @@ If You have any questions about these Terms and conditions, You can contact us:
 
 •	By email: groupv@exeter.ac.uk
 •	By phone:  07460693401
-        </textarea><br>
-		<label for="accepted">I accept the terms and conditions</label>
-		<input type="checkbox" id="accepted" name="accepted" onclick="accept_terms(this);"><br>
-		
-		<input type="submit" id="register" name="register" value="Register" disabled="true">
-	</form>
+			</textarea><br>
+			<label for="accepted">I accept the terms and conditions</label>
+			<input class="agree" type="checkbox" id="accepted" name="accepted" onclick="accept_terms(this);"><br>
+			<input class="inputbox" type="submit" id="register" name="register" value="Register" disabled="true">
+			<p class="inputbox"><a href="/">Return to login page</a></p>
+			<!--<button class="submitbtn">Register</button>-->
+		</form>
 
-	<a href="/">Return to login page</a>
+		</div>
+	</div>
+</div>
 
-	<script language="Javascript">
+<script language="Javascript">
 		function accept_terms(checkbox) {
 			if(checkbox.checked == true) {
 				document.getElementById("register").disabled = false;
