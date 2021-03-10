@@ -20,7 +20,7 @@ your account verification code is as follows
 verification code: """ + code +
 """
 
-if you beleive you have received this code in error, please ignore this email""")
+if you believe you have received this code in error, please ignore this email""")
 
 #sending email
     try:
