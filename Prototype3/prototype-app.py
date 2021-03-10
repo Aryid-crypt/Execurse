@@ -124,11 +124,6 @@ def signup():
 
 	return render_template("signup.html")
 
-verification_email_sent = False #used in verification
-verification_code = verification_code.create_code() #used in verification
-verification_wrong_code = False #used in verification
-verification_resend = False #used in verification
-
 
 @app.route("/verification")
 def account_verification():
