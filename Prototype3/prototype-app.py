@@ -57,7 +57,7 @@ def signup():
 	Arguments:
 		Nothing
 	Returns:
-		redirect(url_for("login")): redirects user to the login page on successful signup
+		redirect(url_for("account_verification")): redirects user to the verification page on successful signup
 		render_template("signup.html"): gets the signup.html file from the templates folder
 	'''
 	global verification_username
@@ -171,7 +171,7 @@ def account_verification():
 
 
     verify_account = """to verify your account, we have sent a code to your email<br>\
-    please enter that code in the box below<br>\
+    please enter that code in the box below, then press enter<br>\
     <form action = '/verification' method = 'get'>\
     <input type = 'text' name = 'entered_code'></form>"""
     if verification_wrong_code == True:
