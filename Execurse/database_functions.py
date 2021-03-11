@@ -719,3 +719,67 @@ def replace_user_email(user_id, email):
     cursor.execute(query, [email, user_id])
     con.commit()
     con.close()
+
+#functions for editing personal Data
+def edit_personal_data(user_id,column_name,new_info):
+	'''
+	Edits personal deatils about the user, eg user_name e_mail and password from the USER table
+	takes in user_id to identify the row of the unique user
+	takes in column_name to identify the record we are changing
+	takes in new_info as the qualified data to be inserted
+	'''
+	con = sl.connect("Execurse.db")
+	cursor = con.cursor()
+	query = """UPDATE USER SET """+column_name+ """ = ? WHERE user_id = ?"""
+	cursor.execute(query, [new_info,user_id])
+	con.commit()
+	con.close()
+def get_user_name_from_id(user_id):
+	'''
+	takes in the user_id and returns user name
+	'''
+	con = sl.connect("Execurse.db")
+	cursor = con.cursor()
+	query = """SELECT username FROM USER WHERE user_id = ?"""
+	cursor.execute(query, [user_id])
+	result = cursor.fetchall()
+	cursor.close()
+	print(result[0][0])
+	return result[0][0]
+
+
+def get_user_eemail(user_id):
+	'''
+	Gets the account email from the database of the user who has logged in.
+	method comes in handy for settings or sharing.
+	Arguments:
+		username(str): username entered during login
+	Returns: e-mail of the user
+	'''
+	con = sl.connect("Execurse.db")
+	cursor = con.cursor()
+	query = """SELECT email FROM USER where user_id = ?"""
+	cursor.execute(query, [user_id])
+	result = cursor.fetchall()
+	cursor.close()
+	email = result[0][0]
+	return email
+
+def get_scores_for_weekly_table():
+	'''Gets the scores of each user in descending order so the highest scorer
+	is returned first and also does not get records where the score is 0.
+	Arguments:
+		Nothing
+	Returns:
+		result(list of tuples): returns empty list if everyone has 0 points
+			username(str): the username that will be displayed on the leaderboard
+			current_points(int): the current score of the user
+	'''
+	con = sl.connect("Execurse.db")
+	cursor = con.cursor()
+	query = """SELECT user_name, points FROM WEEKLYBOARD WHERE points > 0 
+	ORDER BY points DESC"""
+	cursor.execute(query)
+	result = cursor.fetchall()
+	con.close()
+	return result
