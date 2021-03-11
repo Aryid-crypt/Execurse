@@ -698,7 +698,8 @@ def logout():
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
 	if "username" in session:
-		#use user ID because it doesnt change. username is also unique but causes complications when hashing
+		#freedom of editing your personal preferences
+		# pass word and e-mail
 		user_id = session["userid"]
 		user_name= session["username"]
 		e_mail = db.get_user_eemail(user_id)
@@ -755,15 +756,11 @@ def settings():
 					error = True
 
 			if error == False:
-				# we go over the first conditions to make sure unwanted changes aren't made.
-				# like changing an empty string password
 				if user_name != new_name:
 					db.edit_personal_data(user_id,'username',new_name)
 					edit_successful=True
 				if new_password != '':
-					# we need to get the user name just incase the user changes the username also
-					# other wise we would hash the new pass word with the old user name and the...
-					# user would be locked out
+
 					get_name= db.get_user_name_from_id(user_id)
 					hashed_password = hashing.hash_password(get_name, new_password)
 					db.edit_personal_data(user_id,'password',hashed_password)
@@ -774,6 +771,7 @@ def settings():
 
 			if edit_successful == True:
 				# making the user know her/his changes were saved
+
 				done= 'Your Edit Was Successful'
 				return redirect(url_for("settings", successful= done))
 
@@ -820,7 +818,14 @@ def dailyboard():
 
 @app.route('/dailyQuiz', methods=["POST", "GET"])
 def dailyQandA():
+	'''
+	runs neccessary functions to make assemble the users Quiz.
+	In an orderly manner
+	all functions here are throughly described in ChallengesQUiz.py
+	:return: either a challenge or no challenge that reminds the user of the process and his/her past scores
+	'''
 	if "username" in session:
+
 		user_name = session["username"]
 
 		if request.method == "POST":
@@ -839,9 +844,10 @@ def dailyQandA():
 				statement = "You scored 15 points!. You also get  X2 multiplier for a perfect record"
 			return render_template("dailyQuiz.html", quiz=[], answer="", quiz_taken=statement)
 
+		# if youre not in the database, then you should be immediately inserted
 		if game.check_username_already_used_in_table("DAILYQUIZ", user_name) == False:
 			game.create_daily_quiz_instance(user_name)
-
+		#if you havent done your previous challenges but its a new day, you canplay
 		if game.quiz_status_verifier(user_name) == False:
 			if game.date_verification_for_existing_challenger("DAILYQUIZ", user_name, "daily") == True:
 				game.update_quiz_instance(user_name)
@@ -855,7 +861,7 @@ def dailyQandA():
 				the_quiz = random.sample(game.question_prompts, 3)
 				the_answer = [the_quiz[0][5], the_quiz[1][5], the_quiz[2][5]]
 				return render_template("dailyQuiz.html", quiz=the_quiz, answer=the_answer, quiz_taken="")
-
+		# key: if you havent done you challenges and you still have some time left, you can proceed
 		if game.quiz_status_verifier(user_name) == False:
 			the_quiz = random.sample(game.question_prompts, 3)
 			the_answer = [the_quiz[0][5], the_quiz[1][5], the_quiz[2][5]]
