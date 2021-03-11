@@ -22,7 +22,7 @@ SELECTING THE PORT NUMBER AND RUNNING
 In the system files, there is a text document called HOST PORT.txt
 Opening this, enter your chosen port number after the colon, save it and close the text editor.
 Search "Whats my IP" into Google to find you public IP address.
-Run the Program
+Run the file execurse.py using a python interpreter
 
 
 
