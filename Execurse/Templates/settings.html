@@ -38,7 +38,7 @@
 	<p> Edit your personal information</p>
 	<form action="#" method="post">
 		<p>User Name:</p>
-		<p><input type="text" name="u_name" value="{{u_name}}"/></p>
+		<p><input type="text" name="u_name" value="{{u_name}}" readonly/></p>
 		{% with errors = get_flashed_messages(category_filter=["username_error"]) %}
 			{% if errors %}
 				{% for message in errors %}
