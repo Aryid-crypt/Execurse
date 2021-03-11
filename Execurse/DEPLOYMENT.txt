@@ -28,4 +28,4 @@ Run the Program
 
 How to access it on any device connected to the internet:
 Open a web browser and enter you public IP adress followed by a colon followed by your chosen port number
-it will be in the form XYZ.XYZ.XYZ:XYZ where all of the XYZs are numbers.
+it will be in the form XYZ.XYZ.XYZ:XYZ where each XYZ is a number.
