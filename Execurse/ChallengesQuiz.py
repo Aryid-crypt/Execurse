@@ -23,6 +23,7 @@ def results_and_processing(list1,list2):
     '''
     5 points for every correct answer
     get all three correct and you get 30 points.
+    this function takes in a two int strings and stores them
     '''
     score=0
     for i in range(len(list1)):
@@ -51,6 +52,12 @@ so first we make sure they get challenges on a daily or weekly basis
 #check if record exists in the table in question
 #ususally if the record is not abvailable we can then create one
 def check_username_already_used_in_table(table_name,user_name):
+    '''
+
+    :param table_name: name of target sql
+    :param user_name: user_name in question
+    :return:
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """SELECT user_name FROM """+table_name+""" WHERE user_name = ?"""
@@ -127,6 +134,12 @@ def increment_text(text):
         else:
             return(sum)
 def daily_challenge_status_complete(user_name):
+    '''
+
+    :param user_name: this fuctiion takes just the user name to get his/her challenge category
+    from that we are able to select key columns from the database and check if theyre "Completed"
+    :return: True == Completed
+    '''
     objectives = [["login","like_comments","reply_comments"],["add_posts", "like_posts", "add_comments"]]
     c_type=get_challenge_type(user_name)
     challenges= objectives[c_type]
@@ -146,6 +159,11 @@ def daily_challenge_status_complete(user_name):
         return True
 
 def set_challenge_done(user_name):
+    '''
+
+    :param user_name: identifies specific row of the status column to mark if the user is done.
+    :return: Nothing
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """UPDATE DAILYCHALLENGES SET status = (?) WHERE user_name = ?"""
@@ -154,6 +172,12 @@ def set_challenge_done(user_name):
     con.close()
     
 def daily_challenge_status_check(user_name):
+    '''
+
+    :param user_name: identifies specific row of the status column to see if the user is done or not
+    this function contributes to whether the user deserves a new challenge or not.
+    :return: True means done False means the opposite
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """SELECT status FROM DAILYCHALLENGES where user_name = ? """
@@ -167,6 +191,13 @@ def daily_challenge_status_check(user_name):
 
 #def get_users_challenge_type
 def challenge_points_assignment_function(user_name,action):
+    '''
+    :param user_name: username identifies the rows
+    :param action: identifies the column
+    the key here is to extract the two digit sting from the database and increment the first number.
+    indicating the user has made progress
+    :return:
+    '''
     objectives = [["login","like_comments","reply_comments"],["add_posts", "like_posts", "add_comments"]]
     c_type= get_challenge_type(user_name)
     challenges= objectives[c_type]
@@ -185,6 +216,10 @@ def challenge_points_assignment_function(user_name,action):
             con.close()
 
 def initiate_challenge_at_database(user_name):
+    '''
+    :param user_name: using the user_name, we create random daily challenges for the user
+    :return: nothing , adds them To the DB
+    '''
     today = str(datetime.datetime.now().date())
     objectives = [["login","like_comments","reply_comments"],["add_posts", "like_posts", "add_comments"]]
     challenge_type = random.randint(0, (len(objectives) - 1))
@@ -199,6 +234,11 @@ def initiate_challenge_at_database(user_name):
     cursor.close()
 
 def get_challenge_type(user_name):
+    '''
+
+    :param user_name: using the username we can identify the specific coulumn in challenge_type.
+    :return: int .this int is a number of the index of the list of challenges
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """SELECT challenge_type FROM DAILYCHALLENGES where user_name = ? """
@@ -207,6 +247,11 @@ def get_challenge_type(user_name):
     con.close()
     return result[0][0]
 def remove_old_challenge_record(user_name):
+    '''
+
+    :param user_name:
+    :return: when a user is eligible for a new challenge, we remove the old one to make way for the new
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """DELETE FROM DAILYCHALLENGES where user_name = ? """
@@ -215,6 +260,12 @@ def remove_old_challenge_record(user_name):
     con.close()
     
 def create_daily_challenge(user_name):
+    '''
+
+    :param user_name: with only the username we can smartly apply some conditions to determine if
+    he/she is eligible for new daily challenges
+    :return:
+    '''
     if check_username_already_used_in_table("DAILYCHALLENGES",user_name) == False:
         initiate_challenge_at_database(user_name)
 
@@ -224,6 +275,11 @@ def create_daily_challenge(user_name):
             initiate_challenge_at_database(user_name)
 
 def get_daily_challenge_table(user_name):
+    '''
+
+    :param user_name: the user name gets c_type which helps us identify the challenge to display for the user
+    :return:
+    '''
     objectives = [["login","like_comments","reply_comments"],["add_posts", "like_posts", "add_comments"]]
     c_type= get_challenge_type(user_name)
     challenges= objectives[c_type]
@@ -237,6 +293,11 @@ def get_daily_challenge_table(user_name):
     return list(result)
 
 def quiz_status_verifier(user_name):
+    '''
+    just like with daily challenges, a status varifier helps us know if a user is ready for a new challenge
+    :param user_name:
+    :return:
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """SELECT status FROM DAILYQUIZ where user_name = ? """
@@ -249,6 +310,10 @@ def quiz_status_verifier(user_name):
         return True
 
 def the_quiz_has_been_taken(user_name):
+    '''just like with daily challenges, this status varifier helps us know if a user is ready for a new QUIZ
+    :param user_name:
+    :return:
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """UPDATE DAILYQUIZ SET status = ? WHERE user_name = ?"""
@@ -407,6 +472,11 @@ def get_scores_for_weekly_table():
 	return result
 
 def table_reset_function():
+    '''
+    here we identify the oldest record in the WEEKLY DB to see if its seven days old or more
+    if it is. we will reset the entire table to grade the new comming week
+    :return: NOthing
+    '''
     result= get_scores_for_weekly_table()
     time_step = 0
     for i in range(len(result)):
@@ -420,6 +490,11 @@ def table_reset_function():
                     reset_weekly_table()
                     
 def reset_weekly_table():
+    '''
+    here we identify the oldest record in the WEEKLY DB to see if its seven days old or more
+    if it is. we will reset the entire table to grade the new comming week
+    :return: NOthing
+    '''
     con = sl.connect("Execurse.db")
     cursor = con.cursor()
     query = """DELETE FROM WEEKLYBOARD """
