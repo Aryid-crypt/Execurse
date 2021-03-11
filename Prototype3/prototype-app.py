@@ -719,7 +719,7 @@ def error500(error):
 	'''
 	return render_template("500.html")
 
-f = open("Host Port", "r")
+f = open("Host Port.txt", "r")
 portNum = int(str(f.readline())[:-13])
 f.close()
 
