@@ -148,6 +148,7 @@ def account_verification():
     if entered_code:
         if entered_code == session["verificationcode"]:
             verification_username = ""
+	    verification_first = True
             return (redirect(url_for("login")))
         else:
             verification_wrong_code = True
